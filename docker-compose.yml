@@ -75,6 +75,17 @@ services:
       - temporal-network
     ports:
       - 8082:8080
+  cloudflared-tunnel:
+    container_name: cloudflared-tunnel
+    depends_on:
+      - temporal-ui
+    environment: 
+      - "TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}"
+    restart: unless-stopped
+    command: tunnel run
+    image: cloudflare/cloudflared
+    networks:
+      - temporal-network
 networks:
   temporal-network:
     driver: bridge
