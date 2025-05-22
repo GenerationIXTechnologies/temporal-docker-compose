@@ -1,0 +1,25 @@
+persistence:
+  defaultStore: default
+  visibilityStore: postgres-visibility # The primary Visibility store.
+  datastores:
+    default:
+      postgres-visibility:
+      sql:
+        pluginName: 'postgres12' # For PostgreSQL v12 and later. For earlier versions, use "postgres" plugin.
+        databaseName: 'temporal_visibility'
+        connectAddr: ${POSTGRES_SERVER} # default is localhost
+        connectProtocol: ${POSTGRES_PORT} # default is 5432
+        user: ${POSTGRES_USER} # default is postgres
+        password: ${POSTGRES_PASSWORD} # default is postgres
+        maxConns: 2
+        maxIdleConns: 2
+        maxConnLifetime: '1h'
+limit.maxIDLength:
+  - value: 255
+    constraints: {}
+system.forceSearchAttributesCacheRefreshOnRead:
+  - value: true # Dev setup only. Please don't turn this on in production.
+    constraints: {}
+frontend.enableUpdateWorkflowExecution:
+  - value: true
+    constraints: {}
