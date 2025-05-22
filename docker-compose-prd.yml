@@ -11,8 +11,6 @@ services:
       - ES_JAVA_OPTS=-Xms256m -Xmx256m
       - xpack.security.enabled=false
     image: elasticsearch:${ELASTICSEARCH_VERSION}
-    networks:
-      - temporal-network
     expose:
       - 9200
     volumes:
@@ -27,12 +25,12 @@ services:
       - POSTGRES_TLS_ENABLED=true
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PWD=${POSTGRES_PASSWORD}
-      - VISIBILITY_POSTGRES_SEEDS=${POSTGRES_SERVER}
+      - VISIBILITY_POSTGRES_SEEDS=${POSTGRES_SEEDS}
       - VISIBILITY_DBNAME=postgres-visibility
       - VISIBILITY_PORT=5432
       - VISIBILITY_POSTGRES_USER=${POSTGRES_USER}
       - VISIBILITY_POSTGRES_PWD=${POSTGRES_PASSWORD}
-      - VISIBILITY_POSTGRES_SEEDS=${POSTGRES_SERVER}
+      - VISIBILITY_POSTGRES_SEEDS=${POSTGRES_SEEDS}
       - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/prod.yaml
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch
@@ -40,8 +38,6 @@ services:
       - TEMPORAL_ADDRESS=temporal:7233
       - TEMPORAL_CLI_ADDRESS=temporal:7233
     image: temporalio/auto-setup:${TEMPORAL_VERSION}
-    networks:
-      - temporal-network
     ports:
       - 7233:7233
     volumes:
@@ -54,8 +50,6 @@ services:
       - TEMPORAL_ADDRESS=temporal:7233
       - TEMPORAL_CLI_ADDRESS=temporal:7233
     image: temporalio/admin-tools:${TEMPORAL_ADMINTOOLS_VERSION}
-    networks:
-      - temporal-network
     stdin_open: true
     tty: true
   temporal-ui:
@@ -66,11 +60,5 @@ services:
       - TEMPORAL_ADDRESS=temporal:7233
       - TEMPORAL_CORS_ORIGINS=http://localhost:3000
     image: temporalio/ui:${TEMPORAL_UI_VERSION}
-    networks:
-      - temporal-network
     expose:
       - 8080
-networks:
-  temporal-network:
-    driver: bridge
-    name: temporal-network
